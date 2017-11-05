@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1 class="col-md-12"><?= Html::encode($this->title) ?></h1>
 
     <p class="col-md-12">
-        <?= Html::a(Yii::t('app', 'Incluir'), ['create'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(Yii::t('app', 'Incluir'), ['incluir'], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <div class="col-md-12">

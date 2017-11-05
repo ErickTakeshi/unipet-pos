@@ -3,16 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-use yii\web\Controller;
+// use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Cliente;
+use yii\rest\ActiveController;
 
 /**
  * ClienteController implements the CRUD actions for Cliente model.
  */
-class SyncController extends Controller
+class SyncController extends ActiveController
 {
+    public $modelClass = 'app\models\Cliente';
     /**
      * @inheritdoc
      */
@@ -30,9 +32,7 @@ class SyncController extends Controller
 
     public function actionCliente($id = ''){
         $request = Yii::$app->request;
-
         if($request->isPost){
-            return 'is post';
             $cliente = new Cliente();
             $cliente->nome     = $request->post('nome');
             $cliente->cpf      = $request->post('cpf');
@@ -43,12 +43,11 @@ class SyncController extends Controller
             $cliente->telefone = $request->post('telefone');
 
             if($cliente->save()){
-                return 'success';
+                return $this->redirect('http://localhost/unipet-client/index.php/cliente/index');
             }else{
                 return $cliente->getErrors();
             }
         }else if($request->isPut){
-            return 'is put';
             $cliente = Cliente::findOne($request->post('id'));
             $cliente->nome     = $request->post('nome');
             $cliente->cpf      = $request->post('cpf');
@@ -59,12 +58,11 @@ class SyncController extends Controller
             $cliente->telefone = $request->post('telefone');
 
             if($cliente->save()){
-                return 'success';
+                return $this->redirect('http://localhost/unipet-client/index.php/cliente/index');
             }else{
                 return $cliente->getErrors();
             }
         }else if($request->isDelete){
-            return 'is delete';
             if(!$id){
                 return 'Parâmetro id obrigatório.';
             }else{
