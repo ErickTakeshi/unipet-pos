@@ -37,7 +37,9 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Home',    'url' => ['/site/index']],
+            ['label' => 'Cliente', 'url' => ['/cliente/index'], 'visible' => !Yii::$app->user->isGuest],
+
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
@@ -59,6 +61,11 @@ AppAsset::register($this);
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
+        <?php
+            foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
+                echo '<div class="alert alert-' . $key . '">' . $message . '</div>';
+            }
+        ?>
         <?= $content ?>
     </div>
 </div>
