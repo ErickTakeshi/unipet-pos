@@ -39,6 +39,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Home',    'url' => ['/site/index']],
             ['label' => 'Cliente', 'url' => ['/cliente/index'], 'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Serviço', 'url' => ['/servico/index'], 'visible' => !Yii::$app->user->isGuest],
 
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]

@@ -7,6 +7,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Cliente;
+use app\models\Servico;
 use yii\rest\ActiveController;
 
 /**
@@ -79,6 +80,51 @@ class SyncController extends ActiveController
             }else{
                 $cliente = Cliente::find()->where("id = $id")->asArray()->all();
                 return json_encode($cliente);
+            }
+        }
+    }
+
+    public function actionServico($id = ''){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            $servico = new Servico();
+            $servico->descricao  = $request->post('descricao');
+            $servico->observacao = $request->post('observacao');
+            $servico->ativo      = $request->post('ativo');
+
+            if($servico->save()){
+                return $this->redirect('http://localhost/unipet-client/index.php/servico/index');
+            }else{
+                return $servico->getErrors();
+            }
+        }else if($request->isPut){
+            $servico = Servico::findOne($request->post('id'));
+            $servico->descricao  = $request->post('descricao');
+            $servico->observacao = $request->post('observacao');
+            $servico->ativo      = $request->post('ativo');
+
+            if($servico->save()){
+                return $this->redirect('http://localhost/unipet-client/index.php/servico/index');
+            }else{
+                return $servico->getErrors();
+            }
+        }else if($request->isDelete){
+            if(!$id){
+                return 'Parâmetro id obrigatório.';
+            }else{
+                if(Servico::findOne($id)->delete()){
+                    return 'success';
+                }else{
+                    return 'error';
+                }
+            }
+        }else if($request->isGet){
+            if(!$id){
+                $servicos = Servico::find()->asArray()->all();
+                return json_encode($servicos);
+            }else{
+                $servico = Servico::find()->where("id = $id")->asArray()->all();
+                return json_encode($servico);
             }
         }
     }
