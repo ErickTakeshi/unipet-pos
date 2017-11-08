@@ -10,7 +10,7 @@ use yii\filters\VerbFilter;
 /**
  * ClienteController implements the CRUD actions for Cliente model.
  */
-class ClienteController extends Controller
+class RacaController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,7 +30,7 @@ class ClienteController extends Controller
         if(Yii::$app->user->isGuest){
             return $this->redirect(['site/login']);
         }else{
-            $curl = curl_init('http://localhost/unipet-server/index.php/sync/cliente');
+            $curl = curl_init('http://localhost/unipet-server/index.php/sync/raca');
 
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -38,7 +38,7 @@ class ClienteController extends Controller
             $retorno = curl_exec($curl);
             curl_close($curl);
 
-            return $this->render('index', ['clientes' => json_decode($retorno, true)]);
+            return $this->render('index', ['racas' => json_decode($retorno, true)]);
         }
     }
 
@@ -47,14 +47,14 @@ class ClienteController extends Controller
             return $this->redirect(['site/login']);
         }else{     
             $data['id'] = $id;
-            $curl = curl_init('http://localhost/unipet-server/index.php/sync/cliente?id=' . $id);
+            $curl = curl_init('http://localhost/unipet-server/index.php/sync/raca?id=' . $id);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE"); 
             curl_setopt($curl, CURLOPT_POSTFIELDS,    json_encode($data));
             $retorno = curl_exec($curl);
             curl_close($curl);
 
             \Yii::$app->getSession()->setFlash('success', 'Registro excluído com sucesso');
-            return $this->redirect(['cliente/index']);
+            return $this->redirect(['raca/index']);
         }
     }
 
@@ -62,7 +62,7 @@ class ClienteController extends Controller
         if(Yii::$app->user->isGuest){
             return $this->redirect(['site/login']);
         }else{
-            $curl = curl_init('http://localhost/unipet-server/index.php/sync/cliente?id='.$id);
+            $curl = curl_init('http://localhost/unipet-server/index.php/sync/raca?id='.$id);
 
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -70,7 +70,16 @@ class ClienteController extends Controller
             $retorno = curl_exec($curl);
             curl_close($curl);
 
-            return $this->render('update', ['cliente' => json_decode($retorno, true)]);
+            $curl = curl_init('http://localhost/unipet-server/index.php/sync/especie');
+
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $especies = curl_exec($curl);
+            curl_close($curl);
+
+            return $this->render('update', ['raca' => json_decode($retorno, true),
+                                            'especies' => json_decode($especies, true)]);
         }
     }
 
@@ -78,7 +87,15 @@ class ClienteController extends Controller
         if(Yii::$app->user->isGuest){
             return $this->redirect(['site/login']);
         }else{
-            return $this->render('incluir');
+            $curl = curl_init('http://localhost/unipet-server/index.php/sync/especie');
+
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $especies = curl_exec($curl);
+            curl_close($curl);
+
+            return $this->render('incluir', ['especies' => json_decode($especies, true)]);
         }
     }
 }

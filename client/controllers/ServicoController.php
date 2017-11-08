@@ -53,11 +53,7 @@ class ServicoController extends Controller
             $retorno = curl_exec($curl);
             curl_close($curl);
 
-            if($retorno === 'success'){
-                \Yii::$app->getSession()->setFlash('success', 'Registro excluído com sucesso');
-            }else{
-                \Yii::$app->getSession()->setFlash('danger', 'Falha ao excluir registro: ' . $retorno);
-            }
+            \Yii::$app->getSession()->setFlash('success', 'Registro excluído com sucesso');
             return $this->redirect(['servico/index']);
         }
     }

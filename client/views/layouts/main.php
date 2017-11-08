@@ -40,6 +40,9 @@ AppAsset::register($this);
             ['label' => 'Home',    'url' => ['/site/index']],
             ['label' => 'Cliente', 'url' => ['/cliente/index'], 'visible' => !Yii::$app->user->isGuest],
             ['label' => 'Serviço', 'url' => ['/servico/index'], 'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Especie', 'url' => ['/especie/index'], 'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Raça',    'url' => ['/raca/index'],    'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Animal',  'url' => ['/animal/index'],  'visible' => !Yii::$app->user->isGuest],
 
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]

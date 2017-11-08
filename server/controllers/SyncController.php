@@ -8,6 +8,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Cliente;
 use app\models\Servico;
+use app\models\Especie;
+use app\models\Raca;
+use app\models\Animal;
 use yii\rest\ActiveController;
 
 /**
@@ -125,6 +128,141 @@ class SyncController extends ActiveController
             }else{
                 $servico = Servico::find()->where("id = $id")->asArray()->all();
                 return json_encode($servico);
+            }
+        }
+    }
+
+    public function actionEspecie($id = ''){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            $especie = new Especie();
+            $especie->descricao  = $request->post('descricao');
+            $especie->observacao = $request->post('observacao');
+
+            if($especie->save()){
+                return $this->redirect('http://localhost/unipet-client/index.php/especie/index');
+            }else{
+                return $especie->getErrors();
+            }
+        }else if($request->isPut){
+            $especie = Especie::findOne($request->post('id'));
+            $especie->descricao  = $request->post('descricao');
+            $especie->observacao = $request->post('observacao');
+
+            if($especie->save()){
+                return $this->redirect('http://localhost/unipet-client/index.php/especie/index');
+            }else{
+                return $especie->getErrors();
+            }
+        }else if($request->isDelete){
+            if(!$id){
+                return 'Parâmetro id obrigatório.';
+            }else{
+                if(Especie::findOne($id)->delete()){
+                    return 'success';
+                }else{
+                    return 'error';
+                }
+            }
+        }else if($request->isGet){
+            if(!$id){
+                $especies = Especie::find()->asArray()->all();
+                return json_encode($especies);
+            }else{
+                $especie = Especie::find()->where("id = $id")->asArray()->all();
+                return json_encode($especie);
+            }
+        }
+    }
+
+    public function actionRaca($id = ''){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            $raca = new Raca();
+            $raca->descricao  = $request->post('descricao');
+            $raca->observacao = $request->post('observacao');
+            $raca->especie_id = $request->post('especie_id');
+
+            if($raca->save()){
+                return $this->redirect('http://localhost/unipet-client/index.php/raca/index');
+            }else{
+                return $raca->getErrors();
+            }
+        }else if($request->isPut){
+            $raca = Raca::findOne($request->post('id'));
+            $raca->descricao  = $request->post('descricao');
+            $raca->observacao = $request->post('observacao');
+            $raca->especie_id = $request->post('especie_id');
+
+            if($raca->save()){
+                return $this->redirect('http://localhost/unipet-client/index.php/raca/index');
+            }else{
+                return $raca->getErrors();
+            }
+        }else if($request->isDelete){
+            if(!$id){
+                return 'Parâmetro id obrigatório.';
+            }else{
+                if(Raca::findOne($id)->delete()){
+                    return 'success';
+                }else{
+                    return 'error';
+                }
+            }
+        }else if($request->isGet){
+            if(!$id){
+                $racas = Raca::find()->joinWith('especie')->asArray()->all();
+                return json_encode($racas);
+            }else{
+                $raca = Raca::find()->where("id = $id")->asArray()->all();
+                return json_encode($raca);
+            }
+        }
+    }
+
+        public function actionAnimal($id = ''){
+        $request = Yii::$app->request;
+        if($request->isPost){
+            $animal = new Animal();
+            $animal->nome       = $request->post('nome');
+            $animal->sexo       = $request->post('sexo');
+            $animal->raca_id    = $request->post('raca_id');
+            $animal->cliente_id = $request->post('cliente_id');
+
+            if($animal->save()){
+                return $this->redirect('http://localhost/unipet-client/index.php/animal/index');
+            }else{
+                return $animal->getErrors();
+            }
+        }else if($request->isPut){
+            $animal = Animal::findOne($request->post('id'));
+            $animal->nome       = $request->post('nome');
+            $animal->sexo       = $request->post('sexo');
+            $animal->raca_id    = $request->post('raca_id');
+            $animal->cliente_id = $request->post('cliente_id');
+
+            if($animal->save()){
+                return $this->redirect('http://localhost/unipet-client/index.php/animal/index');
+            }else{
+                return $animal->getErrors();
+            }
+        }else if($request->isDelete){
+            if(!$id){
+                return 'Parâmetro id obrigatório.';
+            }else{
+                if(Animal::findOne($id)->delete()){
+                    return 'success';
+                }else{
+                    return 'error';
+                }
+            }
+        }else if($request->isGet){
+            if(!$id){
+                $animais = Animal::find()->joinWith('cliente')->joinWith('raca')->asArray()->all();
+                return json_encode($animais);
+            }else{
+                $animal = Animal::find()->where("id = $id")->asArray()->all();
+                return json_encode($animal);
             }
         }
     }
